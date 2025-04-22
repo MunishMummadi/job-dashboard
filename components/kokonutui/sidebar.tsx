@@ -13,9 +13,9 @@ import {
   Settings,
   HelpCircle,
   Menu,
+  Home,
 } from "lucide-react"
 
-import { Home } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
 import Image from "next/image"
@@ -31,15 +31,18 @@ export default function Sidebar() {
     href,
     icon: Icon,
     children,
+    target,
   }: {
     href: string
     icon: any
     children: React.ReactNode
+    target?: string
   }) {
     return (
       <Link
         href={href}
         onClick={handleNavigation}
+        target={target}
         className="flex items-center px-3 py-2 text-sm rounded-md transition-colors text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-[#1F1F23]"
       >
         <Icon className="h-4 w-4 mr-3 flex-shrink-0" />
@@ -92,51 +95,32 @@ export default function Sidebar() {
                   Main
                 </div>
                 <div className="space-y-1">
-                  <NavItem href="#" icon={Home}>
+                  <NavItem href="/dashboard" icon={Home}>
                     Dashboard
                   </NavItem>
-                  <NavItem href="#" icon={Search}>
-                    Job Search
+                  <NavItem href="/explore" icon={Building2}>
+                    Explore
                   </NavItem>
-                  <NavItem href="#" icon={Briefcase}>
+                  <NavItem href="/my-applications" icon={FileText}>
                     My Applications
                   </NavItem>
-                  <NavItem href="#" icon={BookmarkCheck}>
-                    Saved Jobs
+                  <NavItem href="https://job-search-portal-alpha.vercel.app/" icon={Search} target="_blank">
+                    Job Search
                   </NavItem>
                 </div>
               </div>
 
+              {/* Support Section */}
               <div>
                 <div className="px-3 mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                  Explore
+                  Support
                 </div>
                 <div className="space-y-1">
-                  <NavItem href="#" icon={Building2}>
-                    Companies
-                  </NavItem>
-                  <NavItem href="#" icon={FileText}>
-                    Resources
-                  </NavItem>
-                  <NavItem href="#" icon={Bell}>
-                    Notifications
-                  </NavItem>
-                </div>
-              </div>
-
-              <div>
-                <div className="px-3 mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                  Account
-                </div>
-                <div className="space-y-1">
-                  <NavItem href="#" icon={Users2}>
-                    Profile
-                  </NavItem>
-                  <NavItem href="#" icon={Settings}>
-                    Settings
-                  </NavItem>
-                  <NavItem href="#" icon={HelpCircle}>
+                  <NavItem href="/help" icon={HelpCircle}>
                     Help
+                  </NavItem>
+                  <NavItem href="/resources" icon={FileText}>
+                    Resources
                   </NavItem>
                 </div>
               </div>

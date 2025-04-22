@@ -193,6 +193,7 @@ export function getJobStatistics(jobs: Job[]): {
   topCompanies: { company: string; count: number }[]
   jobsByDate: { date: string; count: number }[]
   skillsDistribution: { skill: string; count: number }[]
+  topJobTitles: { title: string; count: number }[]
 } {
   // Count job types
   const remoteJobs = jobs.filter(
@@ -268,6 +269,19 @@ export function getJobStatistics(jobs: Job[]): {
     .sort((a, b) => b.count - a.count)
     .slice(0, 10)
 
+  // Get top job titles
+  const titleCounts: { [key: string]: number } = {}
+  jobs.forEach((job) => {
+    if (job.Title) {
+      titleCounts[job.Title] = (titleCounts[job.Title] || 0) + 1
+    }
+  })
+
+  const topJobTitles = Object.entries(titleCounts)
+    .map(([title, count]) => ({ title, count }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 10)
+
   return {
     totalJobs: jobs.length,
     remoteJobs,
@@ -279,5 +293,6 @@ export function getJobStatistics(jobs: Job[]): {
     topCompanies,
     jobsByDate,
     skillsDistribution,
+    topJobTitles,
   }
 }

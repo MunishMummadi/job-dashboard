@@ -2,8 +2,8 @@ import { cn } from "@/lib/utils"
 import { ArrowRight, Building, MapPin, Clock } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-import type { Job } from "@/lib/data"
-import { formatDate, getValidLogoUrl } from "@/lib/data"
+import type { Job } from "../../lib/data"
+import { formatDate, getValidLogoUrl } from "../../lib/data"
 
 interface RecentJobsProps {
   jobs?: Job[]

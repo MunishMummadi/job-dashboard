@@ -1,5 +1,5 @@
-import type { Job } from "./data"
-import { extractWorkType, extractSkills } from "./data"
+import type { Job } from "@/lib/data"
+import { extractWorkType, extractSkills } from "@/lib/data"
 
 export function generatePowerBITemplate(jobs: Job[]): string {
   // Create a template for Power BI with sample queries and visualizations

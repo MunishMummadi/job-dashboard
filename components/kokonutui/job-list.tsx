@@ -1,9 +1,13 @@
+"use client"
+
 import { cn } from "@/lib/utils"
 import { ArrowRight, Briefcase, MapPin, Clock } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-import type { Job } from "@/lib/data"
-import { formatDate, extractWorkType, getValidLogoUrl } from "@/lib/data"
+import type { Job } from "../../lib/data"
+import { formatDate, extractWorkType, getValidLogoUrl } from "../../lib/data"
+import { Button } from "@/components/ui/button"
+import { useApplications } from "@/context/applications-context"
 
 interface JobListProps {
   jobs?: Job[]
@@ -11,6 +15,8 @@ interface JobListProps {
 }
 
 export default function JobList({ jobs = [], className }: JobListProps) {
+  const { addJob, isJobApplied } = useApplications();
+
   return (
     <div
       className={cn(
@@ -55,9 +61,20 @@ export default function JobList({ jobs = [], className }: JobListProps) {
                 </div>
 
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-sm font-medium text-zinc-900 dark:text-zinc-100 mb-1 line-clamp-1">
-                    {job.Title || "Job Title"}
-                  </h3>
+                  <div className="flex justify-between items-start gap-2 mb-1">
+                    <h3 className="text-sm font-medium text-zinc-900 dark:text-zinc-100 line-clamp-1 flex-1">
+                      {job.Title || "Job Title"}
+                    </h3>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="text-xs px-2 py-1 h-auto"
+                      onClick={() => addJob(job)}
+                      disabled={isJobApplied(job.Detail_URL)}
+                    >
+                      {isJobApplied(job.Detail_URL) ? "Added" : "Add"}
+                    </Button>
+                  </div>
                   <p className="text-xs text-zinc-600 dark:text-zinc-400 mb-2 line-clamp-1">
                     {job.Company_Name || "Company"}
                   </p>

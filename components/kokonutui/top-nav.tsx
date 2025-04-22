@@ -8,6 +8,8 @@ import Link from "next/link"
 import { ThemeToggle } from "../theme-toggle"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
 
 interface BreadcrumbItem {
   label: string
@@ -19,6 +21,13 @@ export default function TopNav() {
     { label: "JobBoard", href: "#" },
     { label: "dashboard", href: "#" },
   ]
+
+  const router = useRouter()
+  const [searchTerm, setSearchTerm] = useState("")
+
+  const handleSearch = () => {
+    router.push(`/search?q=${searchTerm}`)
+  }
 
   return (
     <nav className="px-3 sm:px-6 flex items-center justify-between bg-white dark:bg-[#0F0F12] border-b border-gray-200 dark:border-[#1F1F23] h-full">
@@ -44,6 +53,8 @@ export default function TopNav() {
         <div className="relative w-full">
           <Input
             type="search"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search for jobs..."
             className="pl-9 pr-4 py-2 w-full bg-gray-50 dark:bg-[#1F1F23] border-gray-200 dark:border-[#2B2B30] focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600"
           />
@@ -52,6 +63,7 @@ export default function TopNav() {
         <Button
           variant="default"
           size="sm"
+          onClick={handleSearch}
           className="bg-zinc-900 dark:bg-zinc-50 text-zinc-50 dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200"
         >
           Search

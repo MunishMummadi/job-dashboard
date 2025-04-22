@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils"
 import { Calendar, MapPin, Briefcase, ExternalLink } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-import type { Job } from "@/lib/data"
+import type { Job } from "../../lib/data"
 import {
   formatDate,
   extractWorkType,
@@ -10,7 +10,7 @@ import {
   extractSalary,
   getValidLogoUrl,
   extractSkills,
-} from "@/lib/data"
+} from "../../lib/data"
 
 interface JobDetailsProps {
   jobs?: Job[]
