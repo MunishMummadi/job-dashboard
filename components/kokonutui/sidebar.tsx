@@ -104,7 +104,7 @@ export default function Sidebar() {
                   <NavItem href="/my-applications" icon={FileText}>
                     My Applications
                   </NavItem>
-                  <NavItem href="https://job-search-portal-alpha.vercel.app/" icon={Search} target="_blank">
+                  <NavItem href="https://job-search-portal-j3nz.vercel.app/" icon={Search} target="_blank">
                     Job Search
                   </NavItem>
                 </div>
