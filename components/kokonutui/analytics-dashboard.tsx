@@ -7,8 +7,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { getJobStatistics, extractWorkType, extractSkills } from "../../lib/data"
-import type { Job } from "../../lib/data"
+import { getJobStatistics, extractWorkType, extractSkills } from "@/lib/data"
+import type { Job } from "@/lib/data"
 import {
   Bar,
   BarChart as RechartsBarChart,
@@ -37,6 +37,7 @@ export default function AnalyticsDashboard({ jobs }: AnalyticsDashboardProps) {
   const [searchTerm, setSearchTerm] = useState("")
   const [filteredJobs, setFilteredJobs] = useState<Job[]>(jobs)
   const [activeTab, setActiveTab] = useState("overview")
+  const [workTypeFilter, setWorkTypeFilter] = useState<string>("all")
 
   // Get statistics for the dashboard
   const stats = getJobStatistics(filteredJobs)
@@ -55,24 +56,31 @@ export default function AnalyticsDashboard({ jobs }: AnalyticsDashboardProps) {
     "#d0ed57",
   ]
 
-  // Filter jobs based on search term
+  // Filter jobs based on search term and work type
   useEffect(() => {
-    if (!searchTerm.trim()) {
-      setFilteredJobs(jobs)
-      return
+    let tempJobs = jobs
+
+    // Apply work type filter first
+    if (workTypeFilter !== "all") {
+      tempJobs = tempJobs.filter((job) => {
+        const workType = extractWorkType(job.Primary_Description).toLowerCase()
+        return workType === workTypeFilter
+      })
     }
 
-    const term = searchTerm.toLowerCase()
-    const filtered = jobs.filter(
-      (job) =>
-        job.Title?.toLowerCase().includes(term) ||
-        job.Company_Name?.toLowerCase().includes(term) ||
-        job.Location?.toLowerCase().includes(term) ||
-        job.Description?.toLowerCase().includes(term),
-    )
+    // Then apply search term filter
+    if (searchTerm.trim()) {
+      const lowerSearchTerm = searchTerm.toLowerCase()
+      tempJobs = tempJobs.filter(
+        (job) =>
+          job.Title.toLowerCase().includes(lowerSearchTerm) ||
+          job.Company_Name.toLowerCase().includes(lowerSearchTerm) ||
+          (job.Location && job.Location.toLowerCase().includes(lowerSearchTerm)),
+      )
+    }
 
-    setFilteredJobs(filtered)
-  }, [searchTerm, jobs])
+    setFilteredJobs(tempJobs)
+  }, [jobs, searchTerm, workTypeFilter])
 
   // Function to export data as CSV
   const exportToCSV = () => {
@@ -127,46 +135,20 @@ export default function AnalyticsDashboard({ jobs }: AnalyticsDashboardProps) {
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm" className="gap-1">
                 <Filter className="h-4 w-4" />
-                <span>Filter</span>
-                <ChevronDown className="h-4 w-4" />
+                <span>Filter ({workTypeFilter !== 'all' ? workTypeFilter.charAt(0).toUpperCase() + workTypeFilter.slice(1) : 'All'})</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuItem onClick={() => setFilteredJobs(jobs)}>All Jobs</DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() =>
-                  setFilteredJobs(
-                    jobs.filter(
-                      (job) => job.Primary_Description && job.Primary_Description.toLowerCase().includes("remote"),
-                    ),
-                  )
-                }
-              >
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => setWorkTypeFilter("all")}>
+                All Jobs
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setWorkTypeFilter("remote")}>
                 Remote Jobs
               </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() =>
-                  setFilteredJobs(
-                    jobs.filter(
-                      (job) => job.Primary_Description && job.Primary_Description.toLowerCase().includes("hybrid"),
-                    ),
-                  )
-                }
-              >
+              <DropdownMenuItem onClick={() => setWorkTypeFilter("hybrid")}>
                 Hybrid Jobs
               </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() =>
-                  setFilteredJobs(
-                    jobs.filter(
-                      (job) =>
-                        job.Primary_Description &&
-                        (job.Primary_Description.toLowerCase().includes("on-site") ||
-                          job.Primary_Description.toLowerCase().includes("onsite")),
-                    ),
-                  )
-                }
-              >
+              <DropdownMenuItem onClick={() => setWorkTypeFilter("on-site")}>
                 On-site Jobs
               </DropdownMenuItem>
             </DropdownMenuContent>
